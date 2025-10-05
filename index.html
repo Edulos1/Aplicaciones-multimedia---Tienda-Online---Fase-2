@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Fruver Shop – Haz mercado en línea</title>
+  <meta name="description" content="Tienda online de frutas y verduras. Compra por peso (kg/lb) con conversión automática.">
+  <!-- Requiere un Style.css en la misma carpeta -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">
+        <!-- <div class="brand-logo" aria-hidden="true">🥬</div> -->
+         <img src="images/logo 2.png" alt="Fruver Shop Logo">
+        <h1>Fruver Shop</h1>
+       <!-- <span class="tag">Haz mercado directo en la web</span> -->
+      </div>
+      <div class="search">
+        <input id="q" placeholder="Buscar producto" autocomplete="off" />
+      </div>
+      <button id="btnCart" class="icon-btn" aria-label="Abrir carrito">
+        🛒 Carrito <span id="cartCount" class="badge">0</span>
+        <span id="cartTotal" class="small">$0</span>
+      </button>
+    </div>
+    <nav id="nav" class="nav container" aria-label="Secciones"></nav>
+  </header>
+
+  <main class="container">
+    <div id="sections"></div>
+  </main>
+
+  <!-- Carrito con compra por peso (kg/lb) y conversión automática -->
+  <aside id="cartPanel" class="cart-panel" role="dialog" aria-label="Carrito">
+    <div class="cart-header">
+      <strong>🛒 Carrito</strong>
+      <div class="row">
+        <button id="btnClear" class="remove">Vaciar</button>
+        <button id="btnClose" class="icon-btn">Cerrar ✕</button>
+      </div>
+    </div>
+    <div id="cartBody" class="cart-body"></div>
+    <div class="cart-foot">
+      <div class="line"><span>Subtotal</span><strong id="subTotal">$0</strong></div>
+      <div class="line"><span>Envío</span><strong id="ship">$0</strong></div>
+      <hr>
+      <div class="line"><span>Total</span><strong id="grand" class="price">$0</strong></div>
+      <button id="btnCheckout" class="checkout" disabled>Proceder al pago</button>
+      <small class="note">* Compra por peso (kg/lb) con conversión automática · * Persistencia en tu navegador</small>
+    </div>
+  </aside>
+
+  <footer class="footer">
+    <p>2025 Fruver Shop - UNAD - 16-04 - Oscar Eduardo Losada Tocora.</p>
+  </footer>
+
+  <!-- ===================== JS embebido: lógica + datos ===================== -->
+  <script>
+  // ----------------- Utilidades -----------------
+  const KG_PER_LB = 0.45359237;
+  const LB_PER_KG = 1 / KG_PER_LB;
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const fmtCOP = v => new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(v||0);
+  const kgToLb = kg => kg * LB_PER_KG;
+  const lbToKg = lb => lb * KG_PER_LB;
+  const deriveUnitPrice = (pricePerKg, avgUnitWeightKg) => (pricePerKg && avgUnitWeightKg) ? pricePerKg * avgUnitWeightKg : null;
+  const deriveKgPrice = (pricePerUnit, avgUnitWeightKg) => (pricePerUnit && avgUnitWeightKg) ? pricePerUnit / avgUnitWeightKg : null;
+
+  // ----------------- Dataset (4 secciones x 2 subsecciones x 3 productos) -----------------
+  const DATA = {
+    "Frutas": {
+      "Tropicales": [
+        { id:"mango-tommy", name:"Mango Tommy",
+          description:"Mango variedad Tommy, dulce y jugoso, ideal para jugos y ensaladas.",
+          image:"https://source.roboflow.com/L6dwkO6zT4RcgPAvGtwkukKW6Ew1/0EP8gtt76ptbkk9XouOw/original.jpg",
+          pricePerKg:6500, avgUnitWeightKg:0.35, defaultMode:"unit" },
+        { id:"pina-golden", name:"Piña Golden",
+          description:"Piña Golden madura, aroma intenso y alta vitamina C.",
+          image:"https://images.rawpixel.com/image_social_landscape/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdXB3azYxNjY1MjY3LXdpa2ltZWRpYS1pbWFnZS1rcDZhNWMzbS5qcGc.jpg",
+          pricePerUnit:5500, avgUnitWeightKg:1.2, defaultMode:"unit" },
+        { id:"papaya-hawaiana", name:"Papaya Hawaiana",
+          description:"Papaya de pulpa anaranjada, perfecta para desayunos y batidos.",
+          image:"https://carulla.vtexassets.com/arquivos/ids/18456849/PAPAYA-HAWAIANA-UNIDAD-1601876_a.jpg?v=638657246091130000",
+          pricePerKg:3800, avgUnitWeightKg:1.4, defaultMode:"weight" }
+      ],
+      "Cítricos": [
+        { id:"naranja-valencia", name:"Naranja Valencia",
+          description:"Naranja para mesa/jugo, dulce y ácida en equilibrio.",
+          image:"https://serenaoranges.com/wp-content/uploads/2019/03/valencia-late.jpg",
+          pricePerKg:5200, avgUnitWeightKg:0.23, defaultMode:"weight" },
+        { id:"limon-tahiti", name:"Limón Tahití",
+          description:"Limón verde sin semillas, ideal para bebidas y aderezos.",
+          image:"https://villavoexpress.com/rails/active_storage/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6NDA4NSwicHVyIjoiYmxvYl9pZCJ9fQ==--08605566b32476406db2014cfd2b908a32919fd0/limones-c.jpg?locale=es",
+          pricePerKg:4800, avgUnitWeightKg:0.11, defaultMode:"weight" },
+        { id:"mandarina", name:"Mandarina",
+          description:"Mandarina fresca, fácil de pelar, perfecta como snack.",
+          image:"https://www.industriaalimentaria.org/public/uploads/images/mandarina%20revista.jpg",
+          pricePerKg:5400, avgUnitWeightKg:0.14, defaultMode:"weight" }
+      ]
+    },
+    "Verduras": {
+      "Hojas": [
+        { id:"espinaca", name:"Espinaca",
+          description:"Hojas tiernas de espinaca, ricas en hierro y fibra.",
+          image:"https://www.gastronomiavasca.net/uploads/image/file/3368/espinacas.jpg",
+          pricePerKg:7600, avgUnitWeightKg:0.25, defaultMode:"weight" },
+        { id:"lechuga-romana", name:"Lechuga Romana",
+          description:"Lechuga crujiente, base clásica para ensaladas.",
+          image:"https://la-canasta.org/wp-content/uploads/2025/06/Lechuga_Romana2.jpg",
+          pricePerUnit:3500, avgUnitWeightKg:0.5, defaultMode:"unit" },
+        { id:"kale", name:"Kale (col rizada)",
+          description:"Excelente para chips al horno y batidos verdes.",
+          image:"https://e01-elmundo.uecdn.es/assets/multimedia/imagenes/2015/10/08/14443061570099.jpg",
+          pricePerKg:9800, avgUnitWeightKg:0.3, defaultMode:"weight" }
+      ],
+      "Raíces": [
+        { id:"zanahoria", name:"Zanahoria",
+          description:"Zanahoria dulce y crocante, alta en betacarotenos.",
+          image:"https://img2.rtve.es/i/?w=1600&i=1690442380387.jpg",
+          pricePerKg:4200, avgUnitWeightKg:0.12, defaultMode:"weight" },
+        { id:"papa-criolla", name:"Papa Criolla",
+          description:"Papa criolla amarilla, ideal para asar o freír.",
+          image:"https://plazamercado.shop/wp-content/uploads/2020/09/Papa-criollaa.jpg",
+          pricePerKg:5200, avgUnitWeightKg:0.08, defaultMode:"weight" },
+        { id:"remolacha", name:"Remolacha",
+          description:"Sabor terroso y color intenso para ensaladas.",
+          image:"https://www.huercasa.com/wp-content/uploads/2024/11/Remolacha-Roja-huercasa.jpg",
+          pricePerKg:3900, avgUnitWeightKg:0.3, defaultMode:"weight" }
+      ]
+    },
+    "Ofertas": {
+      "Promociones por temporada": [
+        { id:"combo-tropical", name:"Combo Tropical",
+          description:"Mango de coco + Piña + carambola + Papaya 1 kg a precio especial.",
+          image:"https://previews.123rf.com/images/ulochka/ulochka1611/ulochka161100652/66717164-coconut-mango-papaya-corambola-and-pineapple-on-the-plate.jpg",
+          pricePerUnit:23000, avgUnitWeightKg:3.0, defaultMode:"unit" },
+        { id:"citricos-detox", name:"Cítricos Detox",
+          description:"Naranja 2 kg + Limón 1 kg + Mandarina 1 kg.",
+          image:"https://conocerlaagricultura.com/wp-content/uploads/2015/05/naranjas-mandarinas-limones-citricos.jpg",
+          pricePerUnit:24000, avgUnitWeightKg:4.0, defaultMode:"unit" },
+        { id:"verdes-2x", name:"Verdes x2",
+          description:"Espinaca 1 kg + Kale 1 kg para smoothies verdes.",
+          image:"https://selecciones.com.mx/wp-content/uploads/2025/07/Kale-vs.-Espinaca.png",
+          pricePerUnit:15000, avgUnitWeightKg:2.0, defaultMode:"unit" }
+      ],
+      "Paquetes familiares": [
+        { id:"canasta-pequena", name:"Canasta Familiar Pequeña",
+          description:"Surtido semanal para 2-3 personas.",
+          image:"https://www.shutterstock.com/image-illustration/shopping-basket-full-variety-grocery-600nw-1974727070.jpg",
+          pricePerUnit:32000, avgUnitWeightKg:4.0, defaultMode:"unit" },
+        { id:"canasta-mediana", name:"Canasta Familiar Mediana",
+          description:"Surtido para 3-4 personas.",
+          image:"https://desdeabajo.info/wp-content/uploads/2021/01/e340f3e337cc6a6fee9ab4bbed180e51.jpg",
+          pricePerUnit:46000, avgUnitWeightKg:6.0, defaultMode:"unit" },
+        { id:"canasta-grande", name:"Canasta Familiar Grande",
+          description:"Surtido para 5+ personas.",
+          image:"https://colombiacheck.s3.us-east-2.amazonaws.com/colcheck/2021-04/160421-explicador-canasta-basica-familiar.png?VersionId=2jH2g9hqY763PKaXGMGvV.h87MhQkePU",
+          pricePerUnit:61000, avgUnitWeightKg:8.0, defaultMode:"unit" }
+      ]
+    },
+    "Recetas": {
+      "Ensaladas": [
+        { id:"kit-ensalada-quinoa-mango", name:"Kit Ensalada Quinoa + Mango (4 porciones)",
+          description:"Incluye quinoa, mango, aguacate, tomate, cebolla morada y cilantro.",
+          image:"https://d36fw6y2wq3bat.cloudfront.net/recipes/ensalada-de-mango-y-quinua-5a9216a9-0ce1-4996-ba09-1f90e9192651/900/ensalada-de-mango-y-quinua-5a9216a9-0ce1-4996-ba09-1f90e9192651_version_1670408120.jpg",
+          pricePerUnit:24000, avgUnitWeightKg:1.2, defaultMode:"unit" },
+        { id:"kit-ensalada-verde", name:"Kit Ensalada Verde Crocante",
+          description:"Rinde 3-4 porciones con mezcla verde y zanahoria.",
+          image:"https://mesasanamx.com/wp-content/uploads/2024/08/Ensalada-oriental-de-edamame-pepino-y-zanahoria.jpeg",
+          pricePerUnit:20000, avgUnitWeightKg:1.1, defaultMode:"unit" },
+        { id:"kit-ensalada-remolacha", name:"Kit Ensalada Remolacha + Naranja",
+          description:"Remolacha, cítricos y vinagreta.",
+          image:"https://recetas.coosur.com/wp-content/uploads/sites/2/2024/01/ensalada-de-remolacha-asada-naranja.jpg",
+          pricePerUnit:22000, avgUnitWeightKg:1.3, defaultMode:"unit" }
+      ],
+      "Jugos y smoothies": [
+        { id:"kit-jugo-naranja", name:"Kit Jugo de Naranja (1 litro)",
+          description:"Naranjas Valencia para exprimir.",
+          image:"https://media.gq.com.mx/photos/5e31d403309f5700081fc82c/master/pass/GettyImages-909604746.jpg",
+          pricePerUnit:12000, avgUnitWeightKg:1.8, defaultMode:"unit" },
+        { id:"kit-smoothie-mango-pina", name:"Kit Smoothie Mango + Piña",
+          description:"Listo para batir. Rinde 2 vasos.",
+          image:"https://7diasdesabor.com/wp-content/uploads/2023/05/7DDS_WEB6-2.png",
+          pricePerUnit:15000, avgUnitWeightKg:1.4, defaultMode:"unit" },
+        { id:"kit-jugo-verde", name:"Kit Jugo Verde Detox",
+          description:"Kale, espinaca, apio, pepino, jangibre y manzana verde.",
+          image:"https://www.infobae.com/new-resizer/ma6cbFAYjNm-fyx6leJYIssotJw=/arc-anglerfish-arc2-prod-infobae/public/7RHYSYMNDFCHVCVCWQOW3RQSSM.jpg",
+          pricePerUnit:16000, avgUnitWeightKg:1.5, defaultMode:"unit" }
+      ]
+    }
+  };
+
+  // ----------------- Estado Carrito -----------------
+  const LS_KEY = 'fruver_cart_html_v1';
+  let CART = []; // [{id,name,image,mode:'unit'|'weight',units?,weightKg?,pricePerUnit?,pricePerKg?,total}]
+  const SHIPPING_FLAT = 8000;
+  const SHIPPING_FREE_FROM = 80000;
+
+  function loadCart(){ try{ CART = JSON.parse(localStorage.getItem(LS_KEY)||'[]'); }catch{ CART=[]; } }
+  function saveCart(){ localStorage.setItem(LS_KEY, JSON.stringify(CART)); }
+
+  // ----------------- Render Nav + Secciones -----------------
+  const navEl = $('#nav');
+  const sectionsEl = $('#sections');
+  const sections = Object.keys(DATA);
+
+  function renderNav(active = sections[0]){
+    navEl.innerHTML = sections.map(s => `
+      <button class="nav-btn ${s===active?'active':''}" data-sec="${s}">${s}</button>
+    `).join('');
+  }
+
+  function cardHTML(p){
+    const unitPrice = p.pricePerUnit ?? deriveUnitPrice(p.pricePerKg, p.avgUnitWeightKg);
+    const kgPrice   = p.pricePerKg   ?? deriveKgPrice(p.pricePerUnit, p.avgUnitWeightKg);
+    const canUnit = unitPrice != null;
+    const canWeight = kgPrice != null;
+
+    const idSafe = p.id.replace(/[^a-z0-9\-]/gi,'');
+    return `
+    <article class="card">
+      <div class="card-header"><img src="${p.image}" alt="${p.name}"></div>
+      <div class="card-body">
+        <div class="card-title">
+          <h3>${p.name}</h3>
+          <div>
+            ${canUnit ? `<div class="small">Unidad: <strong class="price">${fmtCOP(unitPrice)}</strong></div>`:''}
+            ${canWeight ? `<div class="small">Kg: <strong class="price">${fmtCOP(kgPrice)}</strong></div>`:''}
+          </div>
+        </div>
+        <p class="small">${p.description}</p>
+        <div class="row">
+          <label class="small">Comprar por:</label>
+          <select class="input mode" id="mode-${idSafe}">
+            ${canUnit ? `<option value="unit" ${p.defaultMode==='unit'?'selected':''}>Unidad</option>`:''}
+            ${canWeight ? `<option value="weight" ${p.defaultMode==='weight'?'selected':''}>Peso (kg/lb)</option>`:''}
+          </select>
+        </div>
+        <div class="row qty" data-id="${p.id}">
+          <input class="input qty-unit" type="number" min="1" step="1" value="1" ${p.defaultMode==='weight'?'style="display:none"':''} aria-label="Unidades">
+          <input class="input qty-weight" type="number" min="0.1" step="0.1" value="1" ${p.defaultMode==='unit'?'style="display:none"':''} aria-label="Peso">
+          <select class="input qty-wunit" ${p.defaultMode==='unit'?'style="display:none"':''} aria-label="Unidad de peso">
+            <option value="kg">kg</option>
+            <option value="lb">lb</option>
+          </select>
+          <button class="add-btn">Añadir</button>
+          ${p.avgUnitWeightKg ? `<span class="small">~${(p.avgUnitWeightKg*1000).toFixed(0)} g c/u</span>`:''}
+        </div>
+      </div>
+    </article>
+    `;
+  }
+
+  function renderSections(active = sections[0]){
+    sectionsEl.innerHTML = '';
+    const secObj = DATA[active];
+    for (const sub of Object.keys(secObj)){
+      const list = secObj[sub];
+      const grid = list.map(cardHTML).join('');
+      const block = document.createElement('section');
+      block.innerHTML = `
+        <div class="subsection"><h2>${active} · ${sub}</h2></div>
+        <div class="grid">${grid}</div>
+      `;
+      sectionsEl.appendChild(block);
+    }
+    attachCardHandlers();
+  }
+
+  // ----------------- Interacciones de tarjetas -----------------
+  function attachCardHandlers(){
+    // Modo Unidad/Peso
+    $$('.mode').forEach(sel => {
+      sel.addEventListener('change', e => {
+        const card = e.target.closest('.card');
+        const row = card.querySelector('.qty');
+        const unitInput = row.querySelector('.qty-unit');
+        const weightInput = row.querySelector('.qty-weight');
+        const wUnit = row.querySelector('.qty-wunit');
+        const mode = e.target.value;
+        if(mode==='unit'){
+          unitInput.style.display = '';
+          weightInput.style.display = 'none';
+          wUnit.style.display = 'none';
+        }else{
+          unitInput.style.display = 'none';
+          weightInput.style.display = '';
+          wUnit.style.display = '';
+        }
+      });
+    });
+
+    // Añadir al carrito
+    $$('.qty .add-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const row = e.target.closest('.qty');
+        const card = e.target.closest('.card');
+        const id = row.dataset.id;
+
+        // Buscar producto por id
+        let prod;
+        outer: for(const s of Object.values(DATA)){
+          for(const sub of Object.values(s)){
+            for(const p of sub){ if(p.id===id){ prod=p; break outer; } }
+          }
+        }
+        if(!prod) return;
+
+        const modeSel = card.querySelector('.mode').value;
+        const unitPrice = prod.pricePerUnit ?? deriveUnitPrice(prod.pricePerKg, prod.avgUnitWeightKg);
+        const kgPrice   = prod.pricePerKg   ?? deriveKgPrice(prod.pricePerUnit, prod.avgUnitWeightKg);
+
+        if(modeSel==='unit'){
+          const units = Math.max(1, Math.floor(Number(row.querySelector('.qty-unit').value || 0)));
+          if(!(units>=1)) return alert('Cantidad por unidad inválida.');
+          const total = (unitPrice||0) * units;
+          addToCart({ id:prod.id, name:prod.name, image:prod.image, mode:'unit', units, pricePerUnit:unitPrice||0, total });
+        }else{
+          const val = Number(row.querySelector('.qty-weight').value || 0);
+          const wUnit = row.querySelector('.qty-wunit').value; // kg|lb
+          let kg = wUnit==='kg' ? val : lbToKg(val);
+          kg = Math.max(0.1, Number(kg.toFixed(3)));
+          if(!(kg>0)) return alert('Peso inválido.');
+          const total = (kgPrice||0) * kg;
+          addToCart({ id:prod.id, name:prod.name, image:prod.image, mode:'weight', weightKg:kg, pricePerKg:kgPrice||0, total });
+        }
+        openCart();
+      });
+    });
+  }
+
+  // ----------------- Lógica de Carrito -----------------
+  function addToCart(item){
+    const idx = CART.findIndex(i => i.id===item.id && i.mode===item.mode);
+    if(idx>-1){
+      const cur = {...CART[idx]};
+      if(item.mode==='unit'){
+        cur.units += item.units;
+        cur.total = cur.units * cur.pricePerUnit;
+      }else{
+        cur.weightKg = Number((cur.weightKg + item.weightKg).toFixed(3));
+        cur.total = cur.weightKg * cur.pricePerKg;
+      }
+      CART[idx]=cur;
+    }else{
+      CART.push(item);
+    }
+    saveCart(); renderCart();
+  }
+
+  function updateItem(id, mode, changes){
+    CART = CART.map(i=>{
+      if(i.id===id && i.mode===mode){
+        const n = {...i, ...changes};
+        if(mode==='unit'){
+          n.units = Math.max(0, Math.floor(Number(n.units||0)));
+          n.total = n.units * n.pricePerUnit;
+        }else{
+          n.weightKg = Math.max(0, Number(n.weightKg||0));
+          n.total = n.weightKg * n.pricePerKg;
+        }
+        return n;
+      }
+      return i;
+    }).filter(i => i.mode==='unit' ? i.units>0 : i.weightKg>0);
+    saveCart(); renderCart();
+  }
+
+  function removeItem(id, mode){
+    CART = CART.filter(i => !(i.id===id && i.mode===mode));
+    saveCart(); renderCart();
+  }
+
+  function totals(){
+    const subtotal = CART.reduce((a,i)=>a+i.total,0);
+    const shipping = (subtotal===0) ? 0 : (subtotal>SHIPPING_FREE_FROM ? 0 : SHIPPING_FLAT);
+    const total = subtotal + shipping;
+    return { subtotal, shipping, total };
+  }
+
+  // ----------------- Render Carrito -----------------
+  const cartBody = $('#cartBody');
+  function renderCart(){
+    const {subtotal, shipping, total} = totals();
+    $('#subTotal').textContent = fmtCOP(subtotal);
+    $('#ship').textContent = shipping===0 ? 'Gratis' : fmtCOP(shipping);
+    $('#grand').textContent = fmtCOP(total);
+    $('#cartCount').textContent = CART.length;
+    $('#cartTotal').textContent = fmtCOP(total);
+    $('#btnCheckout').disabled = CART.length===0;
+
+    if(!CART.length){
+      cartBody.innerHTML = `<p class="small">Tu carrito está vacío. Agrega productos por <strong>peso (kg/lb)</strong> o por unidad.</p>`;
+      return;
+    }
+
+    cartBody.innerHTML = CART.map(i => `
+      <div class="cart-item">
+        <img src="${i.image}" alt="${i.name}">
+        <div>
+          <div class="row" style="justify-content:space-between">
+            <strong>${i.name}</strong>
+            <span class="price">${fmtCOP(i.total)}</span>
+          </div>
+          <div class="small">
+            ${i.mode==='unit'
+              ? `Modo: Unidad · ${i.units} u · ${fmtCOP(i.pricePerUnit)} c/u`
+              : `Modo: Peso · ${i.weightKg.toFixed(2)} kg · ${fmtCOP(i.pricePerKg)} /kg`}
+          </div>
+          <div class="row" style="margin-top:.4rem">
+            ${i.mode==='unit'
+              ? `<input class="input cart-edit" type="number" min="0" step="1" value="${i.units}" data-id="${i.id}" data-mode="${i.mode}" aria-label="Unidades"/>`
+              : `<input class="input cart-edit" type="number" min="0" step="0.1" value="${i.weightKg}" data-id="${i.id}" data-mode="${i.mode}" aria-label="Peso en kg"/>`
+            }
+            <button class="remove" data-remove="${i.id}" data-mode="${i.mode}">Quitar</button>
+          </div>
+        </div>
+        <div style="align-self:center;color:#94a3b8">${i.mode==='unit'?'U':'KG'}</div>
+      </div>
+    `).join('');
+
+    // edición y remoción
+    $$('.cart-edit').forEach(inp=>{
+      inp.addEventListener('input', e=>{
+        const id = e.target.dataset.id;
+        const mode = e.target.dataset.mode;
+        const val = Number(e.target.value || 0);
+        if(mode==='unit') updateItem(id,mode,{units: val});
+        else updateItem(id,mode,{weightKg: val});
+      });
+    });
+    $$('button[data-remove]').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        removeItem(e.target.dataset.remove, e.target.dataset.mode);
+      });
+    });
+  }
+
+  // ----------------- Búsqueda y accesos rápidos -----------------
+  $('#q').addEventListener('keydown', e=>{
+    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='k'){
+      e.preventDefault(); e.currentTarget.select();
+    }
+  });
+  $('#q').addEventListener('input', e=>{
+    const needle = e.target.value.trim().toLowerCase();
+    $$('.card').forEach(card=>{
+      const text = card.innerText.toLowerCase();
+      card.style.display = text.includes(needle) ? '' : 'none';
+    });
+  });
+
+  // ----------------- Panel Carrito & Nav -----------------
+  const panel = $('#cartPanel');
+  const btnCart = $('#btnCart');
+  const btnClose = $('#btnClose');
+  const btnClear = $('#btnClear');
+  function openCart(){ panel.classList.add('open'); }
+  function closeCart(){ panel.classList.remove('open'); }
+  btnCart.addEventListener('click', openCart);
+  btnClose.addEventListener('click', closeCart);
+  btnClear.addEventListener('click', ()=>{ CART=[]; saveCart(); renderCart(); });
+
+  navEl.addEventListener('click', e=>{
+    const b = e.target.closest('button[data-sec]');
+    if(!b) return;
+    const active = b.dataset.sec;
+    renderNav(active);
+    renderSections(active);
+    $('#q').dispatchEvent(new Event('input')); // mantener filtro de búsqueda
+  });
+
+  // ----------------- Init -----------------
+  (function init(){
+    loadCart();
+    const first = sections[0];
+    renderNav(first);
+    renderSections(first);
+    renderCart();
+  })();
+  </script>
+</body>
+</html>
