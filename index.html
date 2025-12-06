@@ -8,28 +8,33 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Skip link para accesibilidad -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+  
+  <!-- Notificaciones Toast -->
+  <div id="toastContainer" class="toast-container"></div>
+
   <header class="header">
     <div class="container header-inner">
       <div class="brand">
-        <!-- <div class="brand-logo">🥬</div> -->
-        <img src="images/logo 2.png" alt="Fruver Shop Logo">       
+        <img src="images/logo 2.png" alt="Logo de Fruver Shop - Tienda de frutas y verduras frescas" width="50" height="50" loading="eager">       
         <div class="brand-text">
           <h1>Fruver Shop</h1>
           <span class="tagline">Frescura natural a tu puerta</span>
         </div>
       </div>
       <div class="search">
-        <input id="q" placeholder="Buscar producto" autocomplete="off" />
+        <input id="q" type="search" placeholder="Buscar producto" autocomplete="off" aria-label="Buscar productos en el catálogo" />
       </div>
       <div class="header-actions">
-        <button id="btnAuth" class="auth-btn">👤 Ingresar</button>
-        <button id="btnCart" class="icon-btn" aria-label="Abrir carrito">
-          🛒 <span class="badge" id="cartCount">0</span>
+        <button id="btnAuth" class="auth-btn" aria-label="Iniciar sesión o registrarse">👤 Ingresar</button>
+        <button id="btnCart" class="icon-btn" aria-label="Abrir carrito de compras con total">
+          🛒 <span class="badge" id="cartCount" aria-label="Número de productos">0</span>
           <span class="cart-total-display" id="cartTotal">$0</span>
         </button>
       </div>
     </div>
-    <nav id="nav" class="nav container" aria-label="Secciones"></nav>
+    <nav id="nav" class="nav container" role="navigation" aria-label="Navegación por categorías de productos"></nav>
   </header>
 
   <section class="hero">
@@ -45,67 +50,67 @@
     </div>
   </section>
 
-  <main class="container">
+  <main id="main-content" class="container" role="main" aria-label="Catálogo de productos">
     <div id="sections"></div>
   </main>
 
   <!-- Modal de detalles -->
-  <div id="detailModal" class="modal">
+  <div id="detailModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="modalTitle">Detalles del producto</h3>
-        <button class="modal-close" id="modalClose">✕</button>
+        <button class="modal-close" id="modalClose" aria-label="Cerrar ventana de detalles del producto">✕</button>
       </div>
       <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
 
   <!-- Modal de checkout -->
-  <div id="checkoutModal" class="modal">
+  <div id="checkoutModal" class="modal" role="dialog" aria-labelledby="checkoutTitle" aria-modal="true">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Confirmación de pedido</h3>
-        <button class="modal-close" id="checkoutClose">✕</button>
+        <h3 id="checkoutTitle">Confirmación de pedido</h3>
+        <button class="modal-close" id="checkoutClose" aria-label="Cerrar ventana de confirmación">✕</button>
       </div>
       <div class="modal-body" id="checkoutBody"></div>
     </div>
   </div>
 
   <!-- Carrito -->
-  <aside id="cartPanel" class="cart-panel" role="dialog" aria-label="Carrito">
+  <aside id="cartPanel" class="cart-panel" role="dialog" aria-label="Carrito de compras">
     <div class="cart-header">
       <strong>🛒 Carrito</strong>
       <div class="row">
-        <button id="btnClear" class="remove">Vaciar</button>
-        <button id="btnClose" class="icon-btn">Cerrar ✕</button>
+        <button id="btnClear" class="remove" aria-label="Vaciar todos los productos del carrito">Vaciar</button>
+        <button id="btnClose" class="icon-btn" aria-label="Cerrar panel del carrito">Cerrar ✕</button>
       </div>
     </div>
     <div id="cartBody" class="cart-body"></div>
     <div class="cart-foot">
-      <div class="line"><span>Subtotal</span><strong id="subTotal">$0 COP</strong></div>
-      <div class="line"><span>Envío</span><strong id="ship">$0 COP</strong></div>
+      <div class="line"><span>Subtotal</span><strong id="subTotal" aria-label="Subtotal de la compra">$0 COP</strong></div>
+      <div class="line"><span>Envío</span><strong id="ship" aria-label="Costo de envío">$0 COP</strong></div>
       <hr>
-      <div class="line"><span>Total</span><strong id="grand" class="price">$0 COP</strong></div>
-      <button id="btnCheckout" class="checkout" disabled>Proceder al pago</button>
+      <div class="line"><span>Total</span><strong id="grand" class="price" aria-label="Total a pagar">$0 COP</strong></div>
+      <button id="btnCheckout" class="checkout" disabled aria-label="Proceder al pago y confirmar pedido">Proceder al pago</button>
       <small class="note">* Compra por peso (kg/lb) con conversión automática · Persistencia en tu navegador</small>
     </div>
   </aside>
 
-  <footer class="footer">
+  <footer class="footer" role="contentinfo">
     <div class="container">
       <div class="footer-content">
         <div class="footer-section">
           <h4>Fruver Shop</h4>
           <p>Tu tienda online de confianza para frutas y verduras frescas. Calidad garantizada y entrega rápida.</p>
           <div class="social-links">
-          <a href="https://www.facebook.com/?locale=es_LA" aria-label="Facebook" target="_blank" rel="noopener">
-           <img src="images/Facebook.png" alt="Facebook" width="27" height="27" loading="lazy" decoding="async">
+          <a href="https://www.facebook.com/?locale=es_LA" aria-label="Visitar página de Facebook de Fruver Shop" target="_blank" rel="noopener">
+           <img src="images/Facebook.png" alt="Icono de Facebook" width="27" height="27" loading="lazy">
            </a>
-         <a href="https://www.instagram.com/" aria-label="Instagram" target="_blank" rel="noopener">
-           <img src="images/instagram.png" alt="Instagram" width="27" height="38" loading="lazy" decoding="async">
+         <a href="https://www.instagram.com/" aria-label="Visitar perfil de Instagram de Fruver Shop" target="_blank" rel="noopener">
+           <img src="images/instagram.png" alt="Icono de Instagram" width="27" height="38" loading="lazy">
           </a>
-         <a href="https://wa.me/573133421378" aria-label="WhatsApp" target="_blank" rel="noopener">
-           <img src="images/WhatsApp.webp" alt="WhatsApp" width="24" height="24" loading="lazy" decoding="async">
+         <a href="https://wa.me/573133421378" aria-label="Contactar por WhatsApp al +57 313 342 1378" target="_blank" rel="noopener">
+           <img src="images/WhatsApp.webp" alt="Icono de WhatsApp" width="24" height="24" loading="lazy">
             </a>
            </div>
         </div>
@@ -147,13 +152,42 @@
   // ----------------- Utilidades -----------------
   const KG_PER_LB = 0.45359237;
   const LB_PER_KG = 1 / KG_PER_LB;
+  const GRAMS_PER_KG = 1000;
   const $ = sel => document.querySelector(sel);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
   const fmtCOP = v => new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(v||0);
-  const kgToLb = kg => kg * LB_PER_KG;
+  const kgToLb = kg => (kg * LB_PER_KG).toFixed(2);
   const lbToKg = lb => lb * KG_PER_LB;
+  const kgToGrams = kg => Math.round(kg * GRAMS_PER_KG);
+  const gramsToKg = g => g / GRAMS_PER_KG;
   const deriveUnitPrice = (pricePerKg, avgUnitWeightKg) => (pricePerKg && avgUnitWeightKg) ? pricePerKg * avgUnitWeightKg : null;
   const deriveKgPrice = (pricePerUnit, avgUnitWeightKg) => (pricePerUnit && avgUnitWeightKg) ? pricePerUnit / avgUnitWeightKg : null;
+
+  // ----------------- Sistema de Notificaciones Toast -----------------
+  function showToast(message, type = 'success') {
+    const container = $('#toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+    toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
+    
+    container.appendChild(toast);
+    
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  // ----------------- Generador de Número de Pedido -----------------
+  function generateOrderNumber() {
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `FS-${timestamp}-${random}`;
+  }
 
   // ----------------- Dataset -----------------
   const DATA = {
@@ -161,34 +195,34 @@
       "Tropicales": [
         { id:"mango-tommy", name:"Mango Tommy",
           description:"Mango variedad Tommy, dulce y jugoso, ideal para jugos y ensaladas.",
-          image:"https://source.roboflow.com/L6dwkO6zT4RcgPAvGtwkukKW6Ew1/0EP8gtt76ptbkk9XouOw/original.jpg",
+          image:"https://solofruver.com/wp-content/uploads/2020/06/mango.jpg",
           pricePerKg:6500, avgUnitWeightKg:0.35, defaultMode:"unit",
           detailedInfo: "Rico en vitaminas A y C. Origen: Colombia. Ideal para consumo fresco o preparación de jugos naturales." },
         { id:"pina-golden", name:"Piña Golden",
           description:"Piña Golden madura, aroma intenso y alta vitamina C.",
-          image:"https://images.rawpixel.com/image_social_landscape/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdXB3azYxNjY1MjY3LXdpa2ltZWRpYS1pbWFnZS1rcDZhNWMzbS5qcGc.jpg",
+          image:"https://www.comervipc.com/wp-content/uploads/2020/04/PI%C3%91A.jpg",
           pricePerUnit:5500, avgUnitWeightKg:1.2, defaultMode:"unit",
           detailedInfo: "Peso promedio: 1.2 kg. Dulzura natural. Ideal para jugos, ensaladas o consumo directo." },
         { id:"papaya-hawaiana", name:"Papaya Hawaiana",
           description:"Papaya de pulpa anaranjada, perfecta para desayunos y batidos.",
-          image:"https://carulla.vtexassets.com/arquivos/ids/18456849/PAPAYA-HAWAIANA-UNIDAD-1601876_a.jpg?v=638657246091130000",
+          image:"https://cdn1.totalcommerce.cloud/mercadozapatoca/product-image/es/papaya-hawaiana-zapatoca-x-500-gr-1.webp",
           pricePerKg:3800, avgUnitWeightKg:1.4, defaultMode:"weight",
           detailedInfo: "Rica en papaína y fibra. Peso promedio: 1.4 kg. Excelente para la digestión." }
       ],
       "Cítricos": [
         { id:"naranja-valencia", name:"Naranja Valencia",
           description:"Naranja para mesa/jugo, dulce y ácida en equilibrio.",
-          image:"https://serenaoranges.com/wp-content/uploads/2019/03/valencia-late.jpg",
+          image:"https://lamejornaranjadevalencia.com/UserFiles/images/naranjas-ok.png",
           pricePerKg:5200, avgUnitWeightKg:0.23, defaultMode:"weight",
           detailedInfo: "Alta en vitamina C. Peso promedio por unidad: 230g. Ideal para jugo natural." },
         { id:"limon-tahiti", name:"Limón Tahití",
           description:"Limón verde sin semillas, ideal para bebidas y aderezos.",
-          image:"https://elviejoparisvirtual.com/rails/active_storage/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6NTM5OTU4LCJwdXIiOiJibG9iX2lkIn19--721aceff87b4a793962b3afeef5edf42c2db4777/limon-tahiti-e3215178-07e2-4721-b436-eb147eeae582.jpg?locale=es",
+          image:"https://colgreens.com.co/wp-content/uploads/2020/11/fruta-limon.jpg",
           pricePerKg:4800, avgUnitWeightKg:0.11, defaultMode:"weight",
           detailedInfo: "Sin semillas. Peso promedio: 110g. Alto contenido de jugo. Perfecto para limonadas." },
         { id:"mandarina", name:"Mandarina",
           description:"Mandarina fresca, fácil de pelar, perfecta como snack.",
-          image:"https://www.industriaalimentaria.org/public/uploads/images/mandarina%20revista.jpg",
+          image:"https://www.zuvamesa.com/imagenes/imgs-mandarina-2.png",
           pricePerKg:5400, avgUnitWeightKg:0.14, defaultMode:"weight",
           detailedInfo: "Fácil de pelar. Peso promedio: 140g. Rica en antioxidantes y vitamina C." }
       ]
@@ -197,34 +231,34 @@
       "Hojas": [
         { id:"espinaca", name:"Espinaca",
           description:"Hojas tiernas de espinaca, ricas en hierro y fibra.",
-          image:"https://www.gastronomiavasca.net/uploads/image/file/3368/espinacas.jpg",
+          image:"https://www.gastronomiavasca.net/uploads/image/file/3368/w700_espinacas.jpg",
           pricePerKg:7600, avgUnitWeightKg:0.25, defaultMode:"weight",
           detailedInfo: "Superfood rico en hierro y vitaminas. Ideal para ensaladas y smoothies verdes." },
         { id:"lechuga-romana", name:"Lechuga Romana",
           description:"Lechuga crujiente, base clásica para ensaladas.",
-          image:"https://la-canasta.org/wp-content/uploads/2025/06/Lechuga_Romana2.jpg",
+          image:"https://mistiendas.com.co/72-large_default/lechuga-romana-kilo.jpg",
           pricePerUnit:3500, avgUnitWeightKg:0.5, defaultMode:"unit",
           detailedInfo: "Peso promedio: 500g. Crujiente y fresca. Perfecta para ensaladas César." },
         { id:"kale", name:"Kale (col rizada)",
           description:"Excelente para chips al horno y batidos verdes.",
-          image:"https://e01-elmundo.uecdn.es/assets/multimedia/imagenes/2015/10/08/14443061570099.jpg",
+          image:"https://www.cocinista.es/download/bancorecursos/ingredientes/ingrediente-kale.jpg",
           pricePerKg:9800, avgUnitWeightKg:0.3, defaultMode:"weight",
           detailedInfo: "Superfood con alto contenido de vitamina K. Versátil para cocinar o consumir crudo." }
       ],
       "Raíces": [
         { id:"zanahoria", name:"Zanahoria",
           description:"Zanahoria dulce y crocante, alta en betacarotenos.",
-          image:"https://img2.rtve.es/i/?w=1600&i=1690442380387.jpg",
+          image:"https://static.libertyprim.com/files/familles/carotte-large.jpg?1569271734",
           pricePerKg:4200, avgUnitWeightKg:0.12, defaultMode:"weight",
           detailedInfo: "Rica en betacarotenos. Peso promedio: 120g. Excelente para la vista." },
         { id:"papa-criolla", name:"Papa Criolla",
           description:"Papa criolla amarilla, ideal para asar o freír.",
-          image:"https://plazamercado.shop/wp-content/uploads/2020/09/Papa-criollaa.jpg",
+          image:"https://storage.googleapis.com/plazaprecioscom/corabastos/PAPA%20CRIOLLA%20LAVADA.jpg",
           pricePerKg:5200, avgUnitWeightKg:0.08, defaultMode:"weight",
           detailedInfo: "Típica colombiana. Sabor único. Ideal para preparar asada o frita." },
         { id:"remolacha", name:"Remolacha",
           description:"Sabor terroso y color intenso para ensaladas.",
-          image:"https://www.huercasa.com/wp-content/uploads/2024/11/Remolacha-Roja-huercasa.jpg",
+          image:"https://i.blogs.es/08042d/remolachas/840_560.jpg",
           pricePerKg:3900, avgUnitWeightKg:0.3, defaultMode:"weight",
           detailedInfo: "Rica en antioxidantes. Peso promedio: 300g. Perfecta para ensaladas y jugos." }
       ]
@@ -304,7 +338,7 @@
   };
 
   // ----------------- Estado Carrito -----------------
-  const LS_KEY = 'fruver_cart_html_v1';
+  const LS_KEY = 'fruver_cart_html_v2';
   let CART = [];
   const SHIPPING_FLAT = 8000;
   const SHIPPING_FREE_FROM = 80000;
@@ -330,37 +364,51 @@
     const canWeight = kgPrice != null;
 
     const idSafe = p.id.replace(/[^a-z0-9\-]/gi,'');
+    
+    // Precio por libra
+    const lbPrice = kgPrice ? (kgPrice * KG_PER_LB).toFixed(0) : null;
+    
+    // Alt descriptivo para accesibilidad
+    const imgAlt = `Imagen de ${p.name} - ${p.description}`;
+    
     return `
-    <article class="card">
-      <div class="card-header" data-detail="${p.id}">
-        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x300?text=Imagen+no+disponible'">
-        <div class="view-details">Ver detalles</div>
+    <article class="card" role="article" aria-label="Producto: ${p.name}">
+      <div class="card-header" data-detail="${p.id}" role="button" tabindex="0" aria-label="Ver detalles de ${p.name}">
+        <img src="${p.image}" alt="${imgAlt}" width="400" height="300" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=Imagen+no+disponible'">
+        <div class="view-details" aria-hidden="true">Ver detalles</div>
       </div>
       <div class="card-body">
         <div class="card-title">
           <h3>${p.name}</h3>
-          <div>
-            ${canUnit ? `<div class="small">Unidad: <strong class="price">${fmtCOP(unitPrice)}</strong> <span class="currency-label">COP</span></div>`:''}
-            ${canWeight ? `<div class="small">Kg: <strong class="price">${fmtCOP(kgPrice)}</strong> <span class="currency-label">COP</span></div>`:''}
+          <div class="price-container">
+            ${canUnit ? `<div class="price-badge price-badge-unit">
+              <span class="price-label">Unidad</span>
+              <strong class="price">${fmtCOP(unitPrice)}</strong>
+            </div>`:''}
+            ${canWeight ? `<div class="price-badge price-badge-kg">
+              <span class="price-label">Precio por kg</span>
+              <strong class="price">${fmtCOP(kgPrice)}</strong>
+              <span class="price-equiv">(~${fmtCOP(lbPrice)}/lb)</span>
+            </div>`:''}
           </div>
         </div>
         <p class="small">${p.description}</p>
         <div class="row">
-          <label class="small">Comprar por:</label>
-          <select class="input mode" id="mode-${idSafe}">
+          <label for="mode-${idSafe}" class="small">Comprar por:</label>
+          <select class="input mode" id="mode-${idSafe}" aria-label="Seleccionar modo de compra para ${p.name}">
             ${canUnit ? `<option value="unit" ${p.defaultMode==='unit'?'selected':''}>Unidad</option>`:''}
             ${canWeight ? `<option value="weight" ${p.defaultMode==='weight'?'selected':''}>Peso (kg/lb)</option>`:''}
           </select>
         </div>
         <div class="row qty" data-id="${p.id}">
-          <input class="input qty-unit" type="number" min="1" step="1" value="1" ${p.defaultMode==='weight'?'style="display:none"':''} aria-label="Unidades">
-          <input class="input qty-weight" type="number" min="0.1" step="0.1" value="1" ${p.defaultMode==='unit'?'style="display:none"':''} aria-label="Peso">
-          <select class="input qty-wunit" ${p.defaultMode==='unit'?'style="display:none"':''} aria-label="Unidad de peso">
+          <input class="input qty-unit" type="number" min="1" step="1" value="1" ${p.defaultMode==='weight'?'style="display:none"':''} aria-label="Cantidad de unidades de ${p.name}">
+          <input class="input qty-weight" type="number" min="0.10" step="0.10" value="1.00" ${p.defaultMode==='unit'?'style="display:none"':''} aria-label="Peso en kg o lb de ${p.name}">
+          <select class="input qty-wunit" ${p.defaultMode==='unit'?'style="display:none"':''} aria-label="Seleccionar unidad de peso">
             <option value="kg">kg</option>
             <option value="lb">lb</option>
           </select>
-          <button class="add-btn">Añadir</button>
-          ${p.avgUnitWeightKg ? `<span class="small">~${(p.avgUnitWeightKg*1000).toFixed(0)} g c/u</span>`:''}
+          <button class="add-btn add-to-cart-visible" aria-label="Añadir ${p.name} al carrito">🛒 Añadir</button>
+          ${p.avgUnitWeightKg ? `<span class="small weight-info" aria-label="Peso promedio aproximado">~${kgToGrams(p.avgUnitWeightKg)}g c/u</span>`:''}
         </div>
       </div>
     </article>
@@ -395,10 +443,14 @@
 
     const unitPrice = prod.pricePerUnit ?? deriveUnitPrice(prod.pricePerKg, prod.avgUnitWeightKg);
     const kgPrice = prod.pricePerKg ?? deriveKgPrice(prod.pricePerUnit, prod.avgUnitWeightKg);
+    const lbPrice = kgPrice ? (kgPrice * KG_PER_LB).toFixed(0) : null;
+    
+    // Alt descriptivo para accesibilidad
+    const imgAlt = `Imagen detallada de ${prod.name} - ${prod.description}`;
 
     $('#modalTitle').textContent = prod.name;
     $('#modalBody').innerHTML = `
-      <img src="${prod.image}" alt="${prod.name}" style="width:100%; height:300px; object-fit:cover; border-radius:0.5rem; margin-bottom:1rem;" onerror="this.src='https://via.placeholder.com/600x300?text=Imagen+no+disponible'">
+      <img src="${prod.image}" alt="${imgAlt}" width="600" height="300" loading="eager" style="width:100%; height:300px; object-fit:cover; border-radius:0.5rem; margin-bottom:1rem;" onerror="this.src='https://via.placeholder.com/600x300?text=Imagen+no+disponible'">
       <div class="product-info">
         <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Descripción</h4>
         <p>${prod.description}</p>
@@ -406,8 +458,8 @@
         
         <h4 style="color: var(--primary); margin: 1rem 0 0.5rem;">Precios</h4>
         ${unitPrice ? `<p>🔹 Precio por unidad: <strong class="price">${fmtCOP(unitPrice)} COP</strong></p>` : ''}
-        ${kgPrice ? `<p>🔹 Precio por kilogramo: <strong class="price">${fmtCOP(kgPrice)} COP</strong></p>` : ''}
-        ${prod.avgUnitWeightKg ? `<p>🔹 Peso promedio: <strong>${(prod.avgUnitWeightKg*1000).toFixed(0)}g</strong></p>` : ''}
+        ${kgPrice ? `<p>🔹 Precio por kilogramo: <strong class="price">${fmtCOP(kgPrice)} COP</strong> <span class="price-equiv">(~${fmtCOP(lbPrice)}/lb)</span></p>` : ''}
+        ${prod.avgUnitWeightKg ? `<p>🔹 Peso promedio: <strong>${kgToGrams(prod.avgUnitWeightKg)}g</strong></p>` : ''}
       </div>
     `;
     $('#detailModal').classList.add('show');
@@ -419,6 +471,14 @@
       header.addEventListener('click', e => {
         const productId = e.currentTarget.dataset.detail;
         showProductDetail(productId);
+      });
+      // Accesibilidad: permitir activar con Enter o Space
+      header.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const productId = e.currentTarget.dataset.detail;
+          showProductDetail(productId);
+        }
       });
     });
 
@@ -462,17 +522,26 @@
 
         if(modeSel==='unit'){
           const units = Math.max(1, Math.floor(Number(row.querySelector('.qty-unit').value || 0)));
-          if(!(units>=1)) return alert('Cantidad por unidad inválida.');
+          if(!(units>=1)) {
+            showToast('Cantidad por unidad inválida', 'error');
+            return;
+          }
           const total = (unitPrice||0) * units;
           addToCart({ id:prod.id, name:prod.name, image:prod.image, mode:'unit', units, pricePerUnit:unitPrice||0, total });
+          showToast(`${prod.name} añadido al carrito (${units} unidad${units>1?'es':''})`, 'success');
         }else{
           const val = Number(row.querySelector('.qty-weight').value || 0);
           const wUnit = row.querySelector('.qty-wunit').value;
           let kg = wUnit==='kg' ? val : lbToKg(val);
-          kg = Math.max(0.1, Number(kg.toFixed(3)));
-          if(!(kg>0)) return alert('Peso inválido.');
+          kg = Math.max(0.1, Number(kg.toFixed(2)));
+          if(!(kg>0)) {
+            showToast('Peso inválido', 'error');
+            return;
+          }
+          const grams = kgToGrams(kg);
           const total = (kgPrice||0) * kg;
-          addToCart({ id:prod.id, name:prod.name, image:prod.image, mode:'weight', weightKg:kg, pricePerKg:kgPrice||0, total });
+          addToCart({ id:prod.id, name:prod.name, image:prod.image, mode:'weight', weightGrams:grams, pricePerKg:kgPrice||0, total });
+          showToast(`${prod.name} añadido al carrito (${kg.toFixed(2)} kg)`, 'success');
         }
         openCart();
       });
@@ -486,10 +555,11 @@
       const cur = {...CART[idx]};
       if(item.mode==='unit'){
         cur.units += item.units;
-        cur.total = cur.units * cur.pricePerUnit;
+        cur.total = Number((cur.units * cur.pricePerUnit).toFixed(2));
       }else{
-        cur.weightKg = Number((cur.weightKg + item.weightKg).toFixed(3));
-        cur.total = cur.weightKg * cur.pricePerKg;
+        cur.weightGrams = cur.weightGrams + item.weightGrams;
+        const kg = gramsToKg(cur.weightGrams);
+        cur.total = Number((kg * cur.pricePerKg).toFixed(2));
       }
       CART[idx]=cur;
     }else{
@@ -504,21 +574,25 @@
         const n = {...i, ...changes};
         if(mode==='unit'){
           n.units = Math.max(0, Math.floor(Number(n.units||0)));
-          n.total = n.units * n.pricePerUnit;
+          n.total = Number((n.units * n.pricePerUnit).toFixed(2));
         }else{
-          n.weightKg = Math.max(0, Number(n.weightKg||0));
-          n.total = n.weightKg * n.pricePerKg;
+          n.weightGrams = Math.max(0, Math.round(Number(n.weightGrams||0)));
+          const kg = gramsToKg(n.weightGrams);
+          n.total = Number((kg * n.pricePerKg).toFixed(2));
         }
         return n;
       }
       return i;
-    }).filter(i => i.mode==='unit' ? i.units>0 : i.weightKg>0);
+    }).filter(i => i.mode==='unit' ? i.units>0 : i.weightGrams>0);
     saveCart(); renderCart();
+    showToast('Carrito actualizado', 'info');
   }
 
   function removeItem(id, mode){
+    const item = CART.find(i => i.id===id && i.mode===mode);
     CART = CART.filter(i => !(i.id===id && i.mode===mode));
     saveCart(); renderCart();
+    if(item) showToast(`${item.name} eliminado del carrito`, 'info');
   }
 
   function totals(){
@@ -544,38 +618,48 @@
       return;
     }
 
-    cartBody.innerHTML = CART.map(i => `
+    cartBody.innerHTML = CART.map(i => {
+      const displayWeight = i.mode === 'weight' ? gramsToKg(i.weightGrams).toFixed(2) : null;
+      const displayLb = displayWeight ? kgToLb(displayWeight) : null;
+      const imgAlt = `Miniatura de ${i.name} en el carrito`;
+      
+      return `
       <div class="cart-item">
-        <img src="${i.image}" alt="${i.name}">
+        <img src="${i.image}" alt="${imgAlt}" width="60" height="60" loading="lazy">
         <div>
           <div class="row" style="justify-content:space-between">
             <strong>${i.name}</strong>
-            <span class="price">${fmtCOP(i.total)}</span>
+            <span class="price" aria-label="Precio total del producto">${fmtCOP(i.total)}</span>
           </div>
           <div class="small">
             ${i.mode==='unit'
               ? `Modo: Unidad · ${i.units} u · ${fmtCOP(i.pricePerUnit)} c/u`
-              : `Modo: Peso · ${i.weightKg.toFixed(2)} kg · ${fmtCOP(i.pricePerKg)} /kg`}
+              : `Modo: Peso · ${displayWeight} kg (${displayLb} lb) · ${fmtCOP(i.pricePerKg)} /kg`}
           </div>
           <div class="row" style="margin-top:.4rem">
             ${i.mode==='unit'
-              ? `<input class="input cart-edit" type="number" min="0" step="1" value="${i.units}" data-id="${i.id}" data-mode="${i.mode}" aria-label="Unidades"/>`
-              : `<input class="input cart-edit" type="number" min="0" step="0.1" value="${i.weightKg}" data-id="${i.id}" data-mode="${i.mode}" aria-label="Peso en kg"/>`
+              ? `<input class="input cart-edit" type="number" min="0" step="1" value="${i.units}" data-id="${i.id}" data-mode="${i.mode}" aria-label="Modificar cantidad de unidades de ${i.name}"/>`
+              : `<input class="input cart-edit" type="number" min="0" step="0.01" value="${displayWeight}" data-id="${i.id}" data-mode="${i.mode}" aria-label="Modificar peso en kg de ${i.name}"/>`
             }
-            <button class="remove" data-remove="${i.id}" data-mode="${i.mode}">Quitar</button>
+            <button class="remove" data-remove="${i.id}" data-mode="${i.mode}" aria-label="Eliminar ${i.name} del carrito">Quitar</button>
           </div>
         </div>
-        <div style="align-self:center;color:#94a3b8">${i.mode==='unit'?'U':'KG'}</div>
+        <div style="align-self:center;color:#94a3b8" aria-hidden="true">${i.mode==='unit'?'U':'KG'}</div>
       </div>
-    `).join('');
+    `}).join('');
 
     $$('.cart-edit').forEach(inp=>{
       inp.addEventListener('input', e=>{
         const id = e.target.dataset.id;
         const mode = e.target.dataset.mode;
         const val = Number(e.target.value || 0);
-        if(mode==='unit') updateItem(id,mode,{units: val});
-        else updateItem(id,mode,{weightKg: val});
+        if(mode==='unit') {
+          updateItem(id,mode,{units: val});
+        }
+        else {
+          const grams = kgToGrams(val);
+          updateItem(id,mode,{weightGrams: grams});
+        }
       });
     });
     $$('button[data-remove]').forEach(btn=>{
@@ -588,19 +672,28 @@
   // ----------------- Checkout -----------------
   function processCheckout(){
     const {subtotal, shipping, total} = totals();
+    const orderNumber = generateOrderNumber();
+    
     $('#checkoutBody').innerHTML = `
       <div class="checkout-success">
-        <h3 style="color: var(--primary); margin-bottom: 1rem;">¡Pedido Confirmado!</h3>
-        <p style="margin-bottom: 2rem;">Tu pedido ha sido procesado exitosamente</p>
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <h3 style="color: var(--primary); margin-bottom: 0.5rem;">¡Pedido Confirmado!</h3>
+        <div class="order-number">
+          <span>Número de pedido:</span>
+          <strong aria-label="Número de pedido generado">${orderNumber}</strong>
+        </div>
+        <p style="margin-bottom: 2rem; color: #4b5563;">Tu pedido ha sido procesado exitosamente</p>
         
         <div class="order-summary">
           <h4 style="margin-bottom: 1rem;">Resumen del pedido:</h4>
-          ${CART.map(i => `
+          ${CART.map(i => {
+            const displayWeight = i.mode === 'weight' ? gramsToKg(i.weightGrams).toFixed(2) : null;
+            return `
             <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
-              <span>${i.name} ${i.mode==='unit' ? `(${i.units} u)` : `(${i.weightKg.toFixed(2)} kg)`}</span>
+              <span>${i.name} ${i.mode==='unit' ? `(${i.units} u)` : `(${displayWeight} kg)`}</span>
               <strong>${fmtCOP(i.total)} COP</strong>
             </div>
-          `).join('')}
+          `}).join('')}
           <hr>
           <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
             <span>Subtotal:</span>
@@ -617,19 +710,21 @@
           </div>
         </div>
         
-        <p style="margin-top: 2rem; color: #6b7280;">
+        <p style="margin-top: 2rem; color: #4b5563;">
           Recibirás un correo de confirmación con los detalles de tu pedido y el tiempo estimado de entrega.
         </p>
         
-        <p style="margin-top: 1rem; color: #6b7280;">
+        <p style="margin-top: 1rem; color: #4b5563;">
           <strong>Métodos de pago disponibles:</strong><br>
-           Tarjeta de crédito/débito<br>
-           Efectivo contra entrega<br>
-           Transferencia bancaria / PSE
+          ✓ Tarjeta de crédito/débito<br>
+          ✓ Efectivo contra entrega<br>
+          ✓ Transferencia bancaria / PSE
         </p>
       </div>
     `;
     $('#checkoutModal').classList.add('show');
+    
+    showToast(`¡Pedido confirmado! Número: ${orderNumber}`, 'success');
     
     setTimeout(() => {
       CART = [];
@@ -663,7 +758,8 @@
     if(confirm('¿Estás seguro de vaciar el carrito?')){
       CART=[]; 
       saveCart(); 
-      renderCart(); 
+      renderCart();
+      showToast('Carrito vaciado', 'info');
     }
   });
   btnCheckout.addEventListener('click', ()=>{
@@ -687,7 +783,7 @@
   });
 
   $('#btnAuth').addEventListener('click', ()=>{
-    alert('🔐 Funcionalidad de inicio de sesión/registro en desarrollo.\n\nPróximamente podrás:\n✓ Crear una cuenta\n✓ Guardar tus direcciones\n✓ Ver historial de pedidos\n✓ Obtener promociones exclusivas');
+    alert('🔒 Funcionalidad de inicio de sesión/registro en desarrollo.\n\nPróximamente podrás:\n✓ Crear una cuenta\n✓ Guardar tus direcciones\n✓ Ver historial de pedidos\n✓ Obtener promociones exclusivas');
   });
 
   navEl.addEventListener('click', e=>{
